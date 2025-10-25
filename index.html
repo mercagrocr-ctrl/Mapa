@@ -11,10 +11,12 @@
     <style>
         body { margin: 0; padding: 0; }
         #map {
-            height: 80vh; /* Altura mayor para formato vertical */
-            width: 95%; /* Ancho ajustado para centrado */
-            margin: 0 auto; /* Centrado horizontal */
+            height: 80vh; /* Altura por defecto para computadoras */
+            width: 100%; /* Ajustado a 100% para ocupar todo el ancho */
+            margin: 0; /* Eliminar márgenes para maximizar espacio */
             min-height: 300px;
+            position: relative; /* Para posicionar el botón dentro del mapa */
+            transition: height 0.3s ease; /* Transición suave para cambios de tamaño */
         }
         #controls { 
             position: absolute; 
@@ -26,6 +28,20 @@
             border-radius: 5px; 
             box-shadow: 0 0 5px rgba(0,0,0,0.3);
         }
+        #map #fullscreen-btn {
+            position: absolute;
+            bottom: 50px; /* Subido para evitar el logo de Leaflet */
+            left: 20px; /* Extremo izquierdo dentro del mapa */
+            padding: 5px 10px;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif; /* Usar fuente Montserrat */
+            cursor: pointer;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-shadow: 0 0 3px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
         select { 
             padding: 3px; 
             font-size: 14px; 
@@ -36,8 +52,8 @@
         /* Media query para móviles */
         @media (max-width: 768px) {
             #map {
-                height: 90vh; /* Mayor altura para formato vertical en móviles */
-                width: 90%; /* Ancho reducido para mejor ajuste */
+                height: 90vh; /* Altura por defecto para móviles */
+                width: 100%; /* Ajustado a 100% en móviles */
                 min-height: 250px;
             }
             #controls {
@@ -48,6 +64,21 @@
             select {
                 width: 120px;
                 font-size: 12px;
+            }
+            .leaflet-popup-content {
+                font-size: 8px !important; /* Reducir aún más el tamaño de fuente */
+                max-width: 120px !important; /* Reducir ancho del popup */
+                line-height: 1.1 !important; /* Ajustar espaciado vertical para legibilidad */
+                padding: 3px !important; /* Reducir padding interno */
+            }
+            .leaflet-popup-content ul {
+                padding-left: 8px !important; /* Ajustar indentación de la lista */
+            }
+            #map #fullscreen-btn {
+                font-size: 12px;
+                padding: 3px 8px;
+                bottom: 40px; /* Subido para evitar el logo en móviles */
+                left: 15px; /* Ajuste para móviles */
             }
         }
         .leaflet-popup-content {
@@ -69,6 +100,15 @@
         .leaflet-popup-content ul li {
             margin-bottom: 5px; /* Separación leve entre ítems de la lista */
         }
+        /* Estilo para pantalla completa */
+        :fullscreen #map,
+        :-webkit-full-screen #map,
+        :-moz-full-screen #map,
+        :-ms-fullscreen #map {
+            height: 100% !important;
+            width: 100% !important;
+            min-height: 100% !important;
+        }
     </style>
 </head>
 <body>
@@ -80,7 +120,9 @@
             <option value="all">Todos los productos</option>
         </select>
     </div>
-    <div id="map"></div>
+    <div id="map">
+        <button id="fullscreen-btn">Pantalla completa</button>
+    </div>
     <script>
         // Esperar a que el DOM esté listo antes de inicializar
         document.addEventListener('DOMContentLoaded', function() {
@@ -88,9 +130,9 @@
                 zoomControl: false // Desactivar control de zoom por defecto
             }).setView([9.9281, -84.0907], 8);
 
-            // Usar capa satelital de Esri
-            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            // Usar capa predeterminada de OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
             // Mover el control de zoom a la esquina inferior derecha
@@ -164,4 +206,235 @@
                 {
                     category: "Agrícola",
                     name: "ASODUCKUA",
-                    product:
+                    product: "Cacao",
+                    characteristics: "No incluido",
+                    availability: "Todo el año",
+                    phone: "8773-9008",
+                    email: "No incluido",
+                    deliveries: "Dentro del cantón",
+                    others: "Asociación de personas indígenas",
+                    lat: 9.626096579,
+                    lng: -82.87477416
+                },
+                {
+                    category: "Acuícola",
+                    name: "ASODUCKUA",
+                    product: "Pescado",
+                    characteristics: "Tilapia",
+                    availability: "Todo el año",
+                    phone: "8773-9008",
+                    email: "No incluido",
+                    deliveries: "Dentro del cantón",
+                    others: "Asociación de personas indígenas",
+                    lat: 9.626096579,
+                    lng: -82.87477416
+                },
+                {
+                    category: "Procesado",
+                    name: "Entre Aromas",
+                    product: "Varios",
+                    characteristics: "No incluido",
+                    availability: "Todo el año",
+                    phone: "8317-5759",
+                    email: "No incluido",
+                    deliveries: "A cantones vecinos",
+                    others: "Proyecto con Bandera Azul Ecológica",
+                    lat: 10.53625097,
+                    lng: -85.25530138
+                },
+                {
+                    category: "Agrícola",
+                    name: "Finca agrícola",
+                    product: "Papa",
+                    characteristics: "No aportados",
+                    availability: "Todo el año",
+                    phone: "8881-7544",
+                    email: "No incluido",
+                    deliveries: "Dentro del cantón",
+                    others: "No incluido",
+                    lat: 9.916927899,
+                    lng: -83.89214605
+                },
+                {
+                    category: "Agrícola",
+                    name: "Finca agrícola",
+                    product: "Cebolla",
+                    characteristics: "No aportados",
+                    availability: "Todo el año",
+                    phone: "8881-7544",
+                    email: "No incluido",
+                    deliveries: "Dentro del cantón",
+                    others: "No incluido",
+                    lat: 9.916927899,
+                    lng: -83.89214605
+                },
+                {
+                    category: "Agrícola",
+                    name: "Finca agrícola",
+                    product: "Zanahoria",
+                    characteristics: "No aportados",
+                    availability: "Todo el año",
+                    phone: "8881-7544",
+                    email: "No incluido",
+                    deliveries: "Dentro del cantón",
+                    others: "No incluido",
+                    lat: 9.916927899,
+                    lng: -83.89214605
+                },
+                {
+                    category: "Agrícola",
+                    name: "Agricarrots Produce and Trading Company S.A.",
+                    product: "Papa",
+                    characteristics: "Producto lavado. Diversas calidades",
+                    availability: "Todo el año",
+                    phone: "7122-7486",
+                    email: "juanjoramirez1994@gmail.com",
+                    deliveries: "Donde se requiera",
+                    others: "Proyecto con Buenas Prácticas Agrícolas y de Manufactura",
+                    lat: 9.887036196,
+                    lng: -83.87008008
+                },
+                {
+                    category: "Agrícola",
+                    name: "Agricarrots Produce and Trading Company S.A.",
+                    product: "Zanahoria",
+                    characteristics: "Producto lavado. Diversas calidades hasta mínimamente procesado para industria",
+                    availability: "Todo el año",
+                    phone: "7122-7486",
+                    email: "juanjoramirez1994@gmail.com",
+                    deliveries: "Donde se requiera",
+                    others: "Proyecto con Buenas Prácticas Agrícolas y de Manufactura",
+                    lat: 9.887036196,
+                    lng: -83.87008008
+                }
+            ];
+
+            var uniqueCategories = [...new Set(projects.map(project => project.category))].sort();
+            var categorySelect = document.getElementById('categoryFilter');
+            uniqueCategories.forEach(category => {
+                var option = document.createElement('option');
+                option.value = category;
+                option.text = category;
+                categorySelect.appendChild(option);
+            });
+
+            var productSelect = document.getElementById('productFilter');
+            var markersLayer = L.layerGroup().addTo(map);
+
+            // Función para alternar pantalla completa
+            var fullscreenBtn = document.getElementById('fullscreen-btn');
+            if (fullscreenBtn) {
+                console.log("Botón encontrado en el DOM");
+                fullscreenBtn.addEventListener('click', function() {
+                    console.log("Botón clickeado");
+                    var mapElement = document.getElementById('map');
+                    if (document.fullscreenEnabled || document.webkitFullscreenEnabled) {
+                        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+                            console.log("Intentando entrar a pantalla completa");
+                            var promise = mapElement.requestFullscreen 
+                                ? mapElement.requestFullscreen() 
+                                : mapElement.webkitRequestFullscreen 
+                                ? mapElement.webkitRequestFullscreen() 
+                                : mapElement.mozRequestFullScreen 
+                                ? mapElement.mozRequestFullScreen() 
+                                : mapElement.msRequestFullscreen 
+                                ? mapElement.msRequestFullscreen() 
+                                : Promise.reject(new Error('Fullscreen no soportado'));
+                            promise.catch(err => console.error("Error al entrar a fullscreen:", err));
+                            this.textContent = 'Salir de pantalla completa';
+                        } else {
+                            console.log("Intentando salir de pantalla completa");
+                            var promise = document.exitFullscreen 
+                                ? document.exitFullscreen() 
+                                : document.webkitExitFullscreen 
+                                ? document.webkitExitFullscreen() 
+                                : document.mozCancelFullScreen 
+                                ? document.mozCancelFullScreen() 
+                                : document.msExitFullscreen 
+                                ? document.msExitFullscreen() 
+                                : Promise.reject(new Error('Salir de fullscreen no soportado'));
+                            promise.catch(err => console.error("Error al salir de fullscreen:", err));
+                            this.textContent = 'Pantalla completa';
+                        }
+                        setTimeout(function() {
+                            map.invalidateSize(); // Ajustar el mapa al cambiar de tamaño
+                        }, 100);
+                    } else {
+                        console.log("Pantalla completa no soportada en este navegador");
+                        alert("La pantalla completa no está soportada en este navegador.");
+                    }
+                });
+            } else {
+                console.error("Botón fullscreen-btn no encontrado en el DOM");
+            }
+
+            window.updateProductFilter = function() {
+                console.log("updateProductFilter called");
+                var selectedCategory = categorySelect.value;
+                productSelect.innerHTML = '<option value="all">Todos los productos</option>';
+                var filteredProducts = [...new Set(
+                    projects
+                        .filter(project => selectedCategory === 'all' || project.category === selectedCategory)
+                        .map(project => project.product)
+                )].sort();
+                filteredProducts.forEach(product => {
+                    var option = document.createElement('option');
+                    option.value = product;
+                    option.text = product;
+                    productSelect.appendChild(option);
+                });
+                filterMarkers();
+                console.log("Products updated, filtering markers");
+            };
+
+            window.filterMarkers = function() {
+                console.log("filterMarkers called");
+                var selectedCategory = categorySelect.value;
+                var selectedProduct = productSelect.value;
+                markersLayer.clearLayers();
+                projects.forEach(function(project) {
+                    if (
+                        (selectedCategory === 'all' || project.category === selectedCategory) &&
+                        (selectedProduct === 'all' || project.product === selectedProduct)
+                    ) {
+                        var icon = icons[project.category] || L.icon({
+                            iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+                            shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [0, -41],
+                            shadowSize: [41, 41]
+                        });
+                        var marker = L.marker([project.lat, project.lng], { icon: icon }).addTo(markersLayer);
+                        marker.bindPopup(
+                            '<div class="project-name"><b>' + project.name + '</b></div>' +
+                            '<ul>' +
+                                '<li><b>Producto:</b> ' + project.product + '</li>' +
+                                '<li><b>Características:</b> ' + project.characteristics + '</li>' +
+                                '<li><b>Disponibilidad:</b> ' + project.availability + '</li>' +
+                                '<li><b>Teléfono:</b> ' + project.phone + '</li>' +
+                                '<li><b>Correo:</b> ' + project.email + '</li>' +
+                                '<li><b>Entregas:</b> ' + project.deliveries + '</li>' +
+                                '<li><b>Otros detalles:</b> ' + project.others + '</li>' +
+                            '</ul>'
+                        );
+                    }
+                });
+                console.log("Markers filtered with category:", selectedCategory, "and product:", selectedProduct);
+                setTimeout(function() {
+                    map.invalidateSize();
+                }, 100);
+            };
+
+            updateProductFilter();
+            filterMarkers();
+            setTimeout(function() {
+                map.invalidateSize();
+            }, 200);
+
+            // Depuración básica
+            console.log("Mapa inicializado con centro en:", [9.9281, -84.0907]);
+        });
+    </script>
+</body>
+</html>

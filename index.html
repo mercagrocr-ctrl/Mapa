@@ -11,9 +11,10 @@
     <style>
         body { margin: 0; padding: 0; }
         #map {
-            height: 70vh; /* Altura relativa al 70% de la pantalla, ajustable */
-            width: 100%;
-            min-height: 300px; /* Mínimo para evitar que sea demasiado pequeño */
+            height: 80vh; /* Altura mayor para formato vertical */
+            width: 95%; /* Ancho ajustado para centrado */
+            margin: 0 auto; /* Centrado horizontal */
+            min-height: 300px;
         }
         #controls { 
             position: absolute; 
@@ -21,24 +22,24 @@
             left: 10px; 
             z-index: 1000; 
             background: white; 
-            padding: 5px; /* Reducido para móviles */
+            padding: 5px; 
             border-radius: 5px; 
             box-shadow: 0 0 5px rgba(0,0,0,0.3);
         }
         select { 
-            padding: 3px; /* Reducido para móviles */
-            font-size: 14px; /* Ajustado para mejor legibilidad */
-            width: 150px; /* Reducido para evitar desbordamiento */
+            padding: 3px; 
+            font-size: 14px; 
+            width: 150px; 
             margin-bottom: 3px; 
             display: block;
         }
         #fullscreenButton {
-            padding: 3px 8px; /* Reducido para móviles */
-            font-size: 12px; /* Ajustado para mejor legibilidad */
+            padding: 3px 8px; 
+            font-size: 12px; 
             cursor: pointer;
             margin-top: 3px;
             display: block;
-            width: 150px; /* Reducido para evitar desbordamiento */
+            width: 150px; 
             background-color: #f0f0f0;
             border: 1px solid #ccc;
             border-radius: 3px;
@@ -53,6 +54,7 @@
         :-moz-full-screen #map {
             height: 100vh !important;
             width: 100vw !important;
+            margin: 0 !important;
         }
         :fullscreen #controls,
         :-webkit-full-screen #controls,
@@ -63,7 +65,8 @@
         /* Media query para móviles */
         @media (max-width: 768px) {
             #map {
-                height: 60vh; /* Menor altura en móviles para dejar espacio a controles */
+                height: 90vh; /* Mayor altura para formato vertical en móviles */
+                width: 90%; /* Ancho reducido para mejor ajuste */
                 min-height: 250px;
             }
             #controls {
@@ -369,13 +372,15 @@
 
             window.toggleFullscreen = function() {
                 var elem = document.documentElement;
-                if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
                     if (elem.requestFullscreen) {
                         elem.requestFullscreen();
                     } else if (elem.webkitRequestFullscreen) {
                         elem.webkitRequestFullscreen();
                     } else if (elem.mozRequestFullScreen) {
                         elem.mozRequestFullScreen();
+                    } else if (elem.msRequestFullscreen) {
+                        elem.msRequestFullscreen();
                     }
                     document.getElementById('fullscreenButton').textContent = 'Salir de Pantalla Completa';
                 } else {
@@ -385,6 +390,8 @@
                         document.webkitExitFullscreen();
                     } else if (document.mozCancelFullScreen) {
                         document.mozCancelFullScreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
                     }
                     document.getElementById('fullscreenButton').textContent = 'Pantalla Completa';
                 }

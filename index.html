@@ -10,23 +10,76 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { margin: 0; padding: 0; }
-        #map { height: 500px; width: 100%; } /* Altura fija para compatibilidad con Google Sites */
+        #map {
+            height: 70vh; /* Altura relativa al 70% de la pantalla, ajustable */
+            width: 100%;
+            min-height: 300px; /* Mínimo para evitar que sea demasiado pequeño */
+        }
         #controls { 
             position: absolute; 
             top: 10px; 
             left: 10px; 
             z-index: 1000; 
             background: white; 
-            padding: 10px; 
+            padding: 5px; /* Reducido para móviles */
             border-radius: 5px; 
             box-shadow: 0 0 5px rgba(0,0,0,0.3);
         }
         select { 
-            padding: 5px; 
-            font-size: 16px; 
-            width: 200px; 
-            margin-bottom: 5px; 
-            display: block; /* Para mejor alineación en móviles */
+            padding: 3px; /* Reducido para móviles */
+            font-size: 14px; /* Ajustado para mejor legibilidad */
+            width: 150px; /* Reducido para evitar desbordamiento */
+            margin-bottom: 3px; 
+            display: block;
+        }
+        #fullscreenButton {
+            padding: 3px 8px; /* Reducido para móviles */
+            font-size: 12px; /* Ajustado para mejor legibilidad */
+            cursor: pointer;
+            margin-top: 3px;
+            display: block;
+            width: 150px; /* Reducido para evitar desbordamiento */
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        #fullscreenButton:hover {
+            background-color: #e0e0e0;
+        }
+        /* Ajustes para pantalla completa */
+        :fullscreen #map,
+        :-webkit-full-screen #map,
+        :-moz-full-screen #map {
+            height: 100vh !important;
+            width: 100vw !important;
+        }
+        :fullscreen #controls,
+        :-webkit-full-screen #controls,
+        :-moz-full-screen #controls {
+            top: 20px;
+            left: 20px;
+        }
+        /* Media query para móviles */
+        @media (max-width: 768px) {
+            #map {
+                height: 60vh; /* Menor altura en móviles para dejar espacio a controles */
+                min-height: 250px;
+            }
+            #controls {
+                top: 5px;
+                left: 5px;
+                padding: 3px;
+            }
+            select {
+                width: 120px;
+                font-size: 12px;
+            }
+            #fullscreenButton {
+                width: 120px;
+                font-size: 10px;
+                padding: 2px 6px;
+            }
         }
         .leaflet-popup-content {
             font-family: 'Montserrat', sans-serif;
@@ -57,6 +110,7 @@
         <select id="productFilter" onchange="filterMarkers()">
             <option value="all">Todos los productos</option>
         </select>
+        <button id="fullscreenButton" onclick="toggleFullscreen()">Pantalla Completa</button>
     </div>
     <div id="map"></div>
     <script>
@@ -310,6 +364,32 @@
                 console.log("Markers filtered with category:", selectedCategory, "and product:", selectedProduct);
                 setTimeout(function() {
                     map.invalidateSize();
+                }, 100);
+            };
+
+            window.toggleFullscreen = function() {
+                var elem = document.documentElement;
+                if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
+                    if (elem.requestFullscreen) {
+                        elem.requestFullscreen();
+                    } else if (elem.webkitRequestFullscreen) {
+                        elem.webkitRequestFullscreen();
+                    } else if (elem.mozRequestFullScreen) {
+                        elem.mozRequestFullScreen();
+                    }
+                    document.getElementById('fullscreenButton').textContent = 'Salir de Pantalla Completa';
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    }
+                    document.getElementById('fullscreenButton').textContent = 'Pantalla Completa';
+                }
+                setTimeout(function() {
+                    map.invalidateSize(); // Ajustar el tamaño del mapa después de cambiar
                 }, 100);
             };
 

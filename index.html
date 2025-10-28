@@ -52,7 +52,7 @@
         /* Media query para móviles */
         @media (max-width: 768px) {
             #map {
-                height: 85vh; /* Altura por defecto para móviles */
+                height: 90vh; /* Altura por defecto para móviles */
                 width: 100%; /* Ajustado a 100% en móviles */
                 min-height: 250px;
             }
@@ -306,6 +306,110 @@
                     others: "Proyecto con Buenas Prácticas Agrícolas y de Manufactura",
                     lat: 9.887036196,
                     lng: -83.87008008
+                },
+                {
+                    category: "Agrícola",
+                    name: "Finca San Gabriel",
+                    product: "Tomate bola",
+                    characteristics: "No incluido",
+                    availability: "Todo el año",
+                    phone: "8853-2842",
+                    email: "No incluido",
+                    deliveries: "En cantones cercanos",
+                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
+                    lat: 9.788408328654098,
+                    lng: -84.10966829010474
+                },
+                {
+                    category: "Agrícola",
+                    name: "Finca San Gabriel",
+                    product: "Tomate cherry",
+                    characteristics: "No incluido",
+                    availability: "Todo el año",
+                    phone: "8853-2842",
+                    email: "No incluido",
+                    deliveries: "En cantones cercanos",
+                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
+                    lat: 9.788408328654098,
+                    lng: -84.10966829010474
+                },
+                {
+                    category: "Agrícola",
+                    name: "Finca San Gabriel",
+                    product: "Pepino",
+                    characteristics: "No incluido",
+                    availability: "Todo el año",
+                    phone: "8853-2842",
+                    email: "No incluido",
+                    deliveries: "En cantones cercanos",
+                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
+                    lat: 9.788408328654098,
+                    lng: -84.10966829010474
+                },
+                {
+                    category: "Agrícola",
+                    name: "Finca San Gabriel",
+                    product: "Culantro castilla",
+                    characteristics: "No incluido",
+                    availability: "Todo el año",
+                    phone: "8853-2842",
+                    email: "No incluido",
+                    deliveries: "En cantones cercanos",
+                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
+                    lat: 9.788408328654098,
+                    lng: -84.10966829010474
+                },
+                {
+                    category: "Agrícola",
+                    name: "Finca San Gabriel",
+                    product: "Lechuga",
+                    characteristics: "No incluido",
+                    availability: "Manzanade agua y jocote por temporada",
+                    phone: "8853-2842",
+                    email: "No incluido",
+                    deliveries: "En cantones cercanos",
+                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
+                    lat: 9.788408328654098,
+                    lng: -84.10966829010474
+                },
+                {
+                    category: "Agrícola",
+                    name: "Finca San Gabriel",
+                    product: "Zucchini",
+                    characteristics: "No incluido",
+                    availability: "Todo el año",
+                    phone: "8853-2842",
+                    email: "No incluido",
+                    deliveries: "En cantones cercanos",
+                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
+                    lat: 9.788408328654098,
+                    lng: -84.10966829010474
+                },
+                {
+                    category: "Agrícola",
+                    name: "Finca San Gabriel",
+                    product: "Jocote",
+                    characteristics: "No incluido",
+                    availability: "Por temporada",
+                    phone: "8853-2842",
+                    email: "No incluido",
+                    deliveries: "En cantones cercanos",
+                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
+                    lat: 9.788408328654098,
+                    lng: -84.10966829010474
+                },
+                {
+                    category: "Agrícola",
+                    name: "Finca San Gabriel",
+                    product: "Manzana de agua",
+                    characteristics: "No incluido",
+                    availability: "Por temporada",
+                    phone: "8853-2842",
+                    email: "No incluido",
+                    deliveries: "En cantones cercanos",
+                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
+                    lat: 9.788408328654098,
+                    lng: -84.10966829010474
                 }
             ];
 
@@ -320,53 +424,6 @@
 
             var productSelect = document.getElementById('productFilter');
             var markersLayer = L.layerGroup().addTo(map);
-
-            // Función para alternar pantalla completa
-            var fullscreenBtn = document.getElementById('fullscreen-btn');
-            if (fullscreenBtn) {
-                console.log("Botón encontrado en el DOM");
-                fullscreenBtn.addEventListener('click', function() {
-                    console.log("Botón clickeado");
-                    var mapElement = document.getElementById('map');
-                    if (document.fullscreenEnabled || document.webkitFullscreenEnabled) {
-                        if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
-                            console.log("Intentando entrar a pantalla completa");
-                            var promise = mapElement.requestFullscreen 
-                                ? mapElement.requestFullscreen() 
-                                : mapElement.webkitRequestFullscreen 
-                                ? mapElement.webkitRequestFullscreen() 
-                                : mapElement.mozRequestFullScreen 
-                                ? mapElement.mozRequestFullScreen() 
-                                : mapElement.msRequestFullscreen 
-                                ? mapElement.msRequestFullscreen() 
-                                : Promise.reject(new Error('Fullscreen no soportado'));
-                            promise.catch(err => console.error("Error al entrar a fullscreen:", err));
-                            this.textContent = 'Salir de pantalla completa';
-                        } else {
-                            console.log("Intentando salir de pantalla completa");
-                            var promise = document.exitFullscreen 
-                                ? document.exitFullscreen() 
-                                : document.webkitExitFullscreen 
-                                ? document.webkitExitFullscreen() 
-                                : document.mozCancelFullScreen 
-                                ? document.mozCancelFullScreen() 
-                                : document.msExitFullscreen 
-                                ? document.msExitFullscreen() 
-                                : Promise.reject(new Error('Salir de fullscreen no soportado'));
-                            promise.catch(err => console.error("Error al salir de fullscreen:", err));
-                            this.textContent = 'Pantalla completa';
-                        }
-                        setTimeout(function() {
-                            map.invalidateSize(); // Ajustar el mapa al cambiar de tamaño
-                        }, 100);
-                    } else {
-                        console.log("Pantalla completa no soportada en este navegador");
-                        alert("La pantalla completa no está soportada en este navegador.");
-                    }
-                });
-            } else {
-                console.error("Botón fullscreen-btn no encontrado en el DOM");
-            }
 
             window.updateProductFilter = function() {
                 console.log("updateProductFilter called");
@@ -438,8 +495,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-

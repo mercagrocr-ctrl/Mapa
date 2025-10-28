@@ -6,22 +6,21 @@
     <title>Mapa Interactivo de Proyectos en Costa Rica</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <!-- Cargar fuente Montserrat desde Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; padding: 0; }
+        body { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
         #map {
-            height: 80vh; /* Altura por defecto para computadoras */
-            width: 100%; /* Ajustado a 100% para ocupar todo el ancho */
-            margin: 0; /* Eliminar márgenes para maximizar espacio */
+            height: 80vh;
+            width: 100%;
+            margin: 0;
             min-height: 300px;
-            position: relative; /* Para posicionar el botón dentro del mapa */
-            transition: height 0.3s ease; /* Transición suave para cambios de tamaño */
+            position: relative;
+            transition: height 0.3s ease;
         }
         #controls { 
             position: absolute; 
             top: 20px; 
-            left: 50px; /* Mover levemente a la derecha para evitar salida del encuadre */
+            left: 50px;
             z-index: 1000; 
             background: white; 
             padding: 5px; 
@@ -30,84 +29,96 @@
         }
         #map #fullscreen-btn {
             position: absolute;
-            bottom: 50px; /* Subido para evitar el logo de Leaflet */
-            left: 20px; /* Extremo izquierdo dentro del mapa */
-            padding: 5px 10px;
+            bottom: 50px;
+            left: 20px;
+            padding: 8px 12px;
             font-size: 14px;
-            font-family: 'Montserrat', sans-serif; /* Usar fuente Montserrat */
+            font-family: 'Montserrat', sans-serif;
             cursor: pointer;
             background: white;
             border: 1px solid #ccc;
-            border-radius: 3px;
+            border-radius: 5px;
             box-shadow: 0 0 3px rgba(0,0,0,0.3);
             z-index: 1000;
+            transition: all 0.2s;
+        }
+        #map #fullscreen-btn:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
         }
         select { 
-            padding: 3px; 
+            padding: 5px; 
             font-size: 14px; 
             width: 150px; 
-            margin-bottom: 3px; 
+            margin-bottom: 5px; 
             display: block;
+            border-radius: 4px;
+            border: 1px solid #ccc;
         }
+
         /* Media query para móviles */
         @media (max-width: 768px) {
             #map {
-                height: 90vh; /* Altura por defecto para móviles */
-                width: 100%; /* Ajustado a 100% en móviles */
+                height: 90vh;
                 min-height: 250px;
             }
             #controls {
-                top: 5px;
-                left: 20px; /* Ajustado a la derecha en móviles para evitar bordes */
-                padding: 3px;
-            }
-            select {
-                width: 120px;
+                top: 10px;
+                left: 15px;
+                padding: 4px;
                 font-size: 12px;
             }
+            select {
+                width: 130px;
+                font-size: 12px;
+                padding: 4px;
+            }
             .leaflet-popup-content {
-                font-size: 8px !important; /* Reducir aún más el tamaño de fuente */
-                max-width: 120px !important; /* Reducir ancho del popup */
-                line-height: 1.1 !important; /* Ajustar espaciado vertical para legibilidad */
-                padding: 3px !important; /* Reducir padding interno */
+                font-size: 10px !important;
+                max-width: 140px !important;
+                line-height: 1.2 !important;
+                padding: 5px !important;
             }
             .leaflet-popup-content ul {
-                padding-left: 8px !important; /* Ajustar indentación de la lista */
+                padding-left: 12px !important;
+                margin: 4px 0 !important;
             }
             #map #fullscreen-btn {
                 font-size: 12px;
-                padding: 3px 8px;
-                bottom: 40px; /* Subido para evitar el logo en móviles */
-                left: 15px; /* Ajuste para móviles */
+                padding: 6px 10px;
+                bottom: 45px;
+                left: 15px;
             }
         }
+
         .leaflet-popup-content {
             font-family: 'Montserrat', sans-serif;
             font-size: 16px;
             line-height: 1.4;
         }
         .leaflet-popup-content b {
-            font-weight: 700; /* Negrita con Montserrat */
+            font-weight: 700;
         }
         .leaflet-popup-content .project-name {
-            margin-bottom: 10px; /* Separación leve después del name */
+            margin-bottom: 8px;
+            font-size: 17px;
         }
         .leaflet-popup-content ul {
-            margin-top: 5px; /* Separación leve entre name y la lista */
-            padding-left: 20px; /* Ajuste para viñetas */
-            list-style-type: disc; /* Viñetas estándar */
+            margin: 6px 0;
+            padding-left: 20px;
+            list-style-type: disc;
         }
         .leaflet-popup-content ul li {
-            margin-bottom: 5px; /* Separación leve entre ítems de la lista */
+            margin-bottom: 4px;
         }
-        /* Estilo para pantalla completa */
-        :fullscreen #map,
-        :-webkit-full-screen #map,
-        :-moz-full-screen #map,
-        :-ms-fullscreen #map {
-            height: 100% !important;
+
+        /* Pantalla completa */
+        #map:fullscreen,
+        #map:-webkit-full-screen,
+        #map:-moz-full-screen,
+        #map:-ms-fullscreen {
+            height: 100vh !important;
             width: 100% !important;
-            min-height: 100% !important;
         }
     </style>
 </head>
@@ -123,24 +134,21 @@
     <div id="map">
         <button id="fullscreen-btn">Pantalla completa</button>
     </div>
+
     <script>
-        // Esperar a que el DOM esté listo antes de inicializar
         document.addEventListener('DOMContentLoaded', function() {
             var map = L.map('map', {
-                zoomControl: false // Desactivar control de zoom por defecto
+                zoomControl: false
             }).setView([9.9281, -84.0907], 8);
 
-            // Usar capa predeterminada de OpenStreetMap
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
-            // Mover el control de zoom a la esquina inferior derecha
             L.control.zoom({
                 position: 'bottomright'
             }).addTo(map);
 
-            // Definir íconos personalizados con colores sutiles por categoría
             var icons = {
                 'Agrícola': L.icon({
                     iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
@@ -177,340 +185,147 @@
             };
 
             var projects = [
-                {
-                    category: "Agrícola",
-                    name: "Productos D´Fresa",
-                    product: "Fresa",
-                    characteristics: "Fresa fresca y congelada",
-                    otherp: "No",
-                    availability: "Todo el año",
-                    phone: "8707-9642",
-                    email: "No incluido",
-                    deliveries: "A cantones vecinos",
-                    others: "No incluido",
-                    lat: 10.17461859,
-                    lng: -84.15852415
-                },
-                {
-                    category: "Agrícola",
-                    name: "ASODUCKUA",
-                    product: "Plátano",
-                    characteristics: "No incluido",
-                    otherp: "Tilapia y cacao",
-                    availability: "Todo el año",
-                    phone: "8773-9008",
-                    email: "No incluido",
-                    deliveries: "Dentro del cantón",
-                    others: "Asociación de personas indígenas",
-                    lat: 9.626096579,
-                    lng: -82.87477416
-                },
-                {
-                    category: "Agrícola",
-                    name: "ASODUCKUA",
-                    product: "Cacao",
-                    characteristics: "No incluido",
-                    otherp: "Plátano y tilapia",
-                    availability: "Todo el año",
-                    phone: "8773-9008",
-                    email: "No incluido",
-                    deliveries: "Dentro del cantón",
-                    others: "Asociación de personas indígenas",
-                    lat: 9.626096579,
-                    lng: -82.87477416
-                },
-                {
-                    category: "Acuícola",
-                    name: "ASODUCKUA",
-                    product: "Pescado",
-                    characteristics: "Tilapia",
-                    otherp: "Plátano y cacao",
-                    availability: "Todo el año",
-                    phone: "8773-9008",
-                    email: "No incluido",
-                    deliveries: "Dentro del cantón",
-                    others: "Asociación de personas indígenas",
-                    lat: 9.626096579,
-                    lng: -82.87477416
-                },
-                {
-                    category: "Procesado",
-                    name: "Entre Aromas",
-                    product: "Varios",
-                    characteristics: "Yogurt, condimentos naturales, mermeladas, fruta deshidratada, entre otros",
-                    availability: "Todo el año",
-                    phone: "8317-5759",
-                    email: "No incluido",
-                    deliveries: "A cantones vecinos",
-                    others: "Proyecto con Bandera Azul Ecológica",
-                    lat: 10.53625097,
-                    lng: -85.25530138
-                },
-                {
-                    category: "Agrícola",
-                    name: "Finca agrícola",
-                    product: "Papa",
-                    characteristics: "No aportados",
-                    otherp: "Cebolla y zanahoria",
-                    availability: "Todo el año",
-                    phone: "8881-7544",
-                    email: "No incluido",
-                    deliveries: "Dentro del cantón",
-                    others: "No incluido",
-                    lat: 9.916927899,
-                    lng: -83.89214605
-                },
-                {
-                    category: "Agrícola",
-                    name: "Finca agrícola",
-                    product: "Cebolla",
-                    characteristics: "No aportados",
-                    otherp: "Papa y zanahoria",
-                    availability: "Todo el año",
-                    phone: "8881-7544",
-                    email: "No incluido",
-                    deliveries: "Dentro del cantón",
-                    others: "No incluido",
-                    lat: 9.916927899,
-                    lng: -83.89214605
-                },
-                {
-                    category: "Agrícola",
-                    name: "Finca agrícola",
-                    product: "Zanahoria",
-                    characteristics: "No aportados",
-                    otherp: "Cebolla y papa",
-                    availability: "Todo el año",
-                    phone: "8881-7544",
-                    email: "No incluido",
-                    deliveries: "Dentro del cantón",
-                    others: "No incluido",
-                    lat: 9.916927899,
-                    lng: -83.89214605
-                },
-                {
-                    category: "Agrícola",
-                    name: "Agricarrots Produce and Trading Company S.A.",
-                    product: "Papa",
-                    characteristics: "Producto lavado. Diversas calidades",
-                    otherp: "Zanahoria",
-                    availability: "Todo el año",
-                    phone: "7122-7486",
-                    email: "juanjoramirez1994@gmail.com",
-                    deliveries: "Donde se requiera",
-                    others: "Proyecto con Buenas Prácticas Agrícolas y de Manufactura",
-                    lat: 9.887036196,
-                    lng: -83.87008008
-                },
-                {
-                    category: "Agrícola",
-                    name: "Agricarrots Produce and Trading Company S.A.",
-                    product: "Zanahoria",
-                    characteristics: "Producto lavado. Diversas calidades hasta mínimamente procesado para industria",
-                    otherp: "Papa",
-                    availability: "Todo el año",
-                    phone: "7122-7486",
-                    email: "juanjoramirez1994@gmail.com",
-                    deliveries: "Donde se requiera",
-                    others: "Proyecto con Buenas Prácticas Agrícolas y de Manufactura",
-                    lat: 9.887036196,
-                    lng: -83.87008008
-                },
-                {
-                    category: "Agrícola",
-                    name: "Finca San Gabriel",
-                    product: "Tomate bola",
-                    characteristics: "No incluido",
-                    otherp: "Tomate cherry, pepino, lechuga, culantro castilla, zucchini, jocote y manzana de agua",
-                    availability: "Todo el año",
-                    phone: "8853-2842",
-                    email: "No incluido",
-                    deliveries: "En cantones cercanos",
-                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
-                    lat: 9.788408328654098,
-                    lng: -84.10966829010474
-                },
-                {
-                    category: "Agrícola",
-                    name: "Finca San Gabriel",
-                    product: "Tomate cherry",
-                    characteristics: "No incluido",
-                    otherp: "Tomate bola, pepino, lechuga, culantro castilla, zucchini, jocote y manzana de agua",
-                    availability: "Todo el año",
-                    phone: "8853-2842",
-                    email: "No incluido",
-                    deliveries: "En cantones cercanos",
-                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
-                    lat: 9.788408328654098,
-                    lng: -84.10966829010474
-                },
-                {
-                    category: "Agrícola",
-                    name: "Finca San Gabriel",
-                    product: "Pepino",
-                    characteristics: "No incluido",
-                    otherp: "Tomate bola, tomate cherry, lechuga, culantro castilla, zucchini, jocote y manzana de agua",
-                    availability: "Todo el año",
-                    phone: "8853-2842",
-                    email: "No incluido",
-                    deliveries: "En cantones cercanos",
-                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
-                    lat: 9.788408328654098,
-                    lng: -84.10966829010474
-                },
-                {
-                    category: "Agrícola",
-                    name: "Finca San Gabriel",
-                    product: "Culantro castilla",
-                    characteristics: "No incluido",
-                    otherp: "Tomate bola, tomate cherry, lechuga, pepino, zucchini, jocote y manzana de agua",
-                    availability: "Todo el año",
-                    phone: "8853-2842",
-                    email: "No incluido",
-                    deliveries: "En cantones cercanos",
-                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
-                    lat: 9.788408328654098,
-                    lng: -84.10966829010474
-                },
-                {
-                    category: "Agrícola",
-                    name: "Finca San Gabriel",
-                    product: "Lechuga",
-                    characteristics: "No incluido",
-                    otherp: "Tomate bola, tomate cherry, culantro castilla, pepino, zucchini, jocote y manzana de agua",
-                    availability: "Todo el año",
-                    phone: "8853-2842",
-                    email: "No incluido",
-                    deliveries: "En cantones cercanos",
-                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
-                    lat: 9.788408328654098,
-                    lng: -84.10966829010474
-                },
-                {
-                    category: "Agrícola",
-                    name: "Finca San Gabriel",
-                    product: "Zucchini",
-                    characteristics: "No incluido",
-                    otherp: "Tomate bola, tomate cherry, culantro castilla, pepino, lechuga, jocote y manzana de agua",
-                    availability: "Todo el año",
-                    phone: "8853-2842",
-                    email: "No incluido",
-                    deliveries: "En cantones cercanos",
-                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
-                    lat: 9.788408328654098,
-                    lng: -84.10966829010474
-                },
-                {
-                    category: "Agrícola",
-                    name: "Finca San Gabriel",
-                    product: "Jocote",
-                    characteristics: "No incluido",
-                    otherp: "Tomate bola, tomate cherry, culantro castilla, pepino, lechuga, zucchini y manzana de agua",
-                    availability: "Por temporada",
-                    phone: "8853-2842",
-                    email: "No incluido",
-                    deliveries: "En cantones cercanos",
-                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
-                    lat: 9.788408328654098,
-                    lng: -84.10966829010474
-                },
-                {
-                    category: "Agrícola",
-                    name: "Finca San Gabriel",
-                    product: "Manzana de agua",
-                    characteristics: "No incluido",
-                    otherp: "Tomate bola, tomate cherry, culantro castilla, pepino, lechuga, zucchini y jocote",
-                    availability: "Por temporada",
-                    phone: "8853-2842",
-                    email: "No incluido",
-                    deliveries: "En cantones cercanos",
-                    others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica",
-                    lat: 9.788408328654098,
-                    lng: -84.10966829010474
-                }
+                { category: "Agrícola", name: "Productos D´Fresa", product: "Fresa", characteristics: "Fresa fresca y congelada", otherp: "No", availability: "Todo el año", phone: "8707-9642", email: "No incluido", deliveries: "A cantones vecinos", others: "No incluido", lat: 10.17461859, lng: -84.15852415 },
+                { category: "Agrícola", name: "ASODUCKUA", product: "Plátano", characteristics: "No incluido", otherp: "Tilapia y cacao", availability: "Todo el año", phone: "8773-9008", email: "No incluido", deliveries: "Dentro del cantón", others: "Asociación de personas indígenas", lat: 9.626096579, lng: -82.87477416 },
+                { category: "Agrícola", name: "ASODUCKUA", product: "Cacao", characteristics: "No incluido", otherp: "Plátano y tilapia", availability: "Todo el año", phone: "8773-9008", email: "No incluido", deliveries: "Dentro del cantón", others: "Asociación de personas indígenas", lat: 9.626096579, lng: -82.87477416 },
+                { category: "Acuícola", name: "ASODUCKUA", product: "Pescado", characteristics: "Tilapia", otherp: "Plátano y cacao", availability: "Todo el año", phone: "8773-9008", email: "No incluido", deliveries: "Dentro del cantón", others: "Asociación de personas indígenas", lat: 9.626096579, lng: -82.87477416 },
+                { category: "Procesado", name: "Entre Aromas", product: "Varios", characteristics: "Yogurt, condimentos naturales, mermeladas, fruta deshidratada, entre otros", availability: "Todo el año", phone: "8317-5759", email: "No incluido", deliveries: "A cantones vecinos", others: "Proyecto con Bandera Azul Ecológica", lat: 10.53625097, lng: -85.25530138 },
+                { category: "Agrícola", name: "Finca agrícola", product: "Papa", characteristics: "No aportados", otherp: "Cebolla y zanahoria", availability: "Todo el año", phone: "8881-7544", email: "No incluido", deliveries: "Dentro del cantón", others: "No incluido", lat: 9.916927899, lng: -83.89214605 },
+                { category: "Agrícola", name: "Finca agrícola", product: "Cebolla", characteristics: "No aportados", otherp: "Papa y zanahoria", availability: "Todo el año", phone: "8881-7544", email: "No incluido", deliveries: "Dentro del cantón", others: "No incluido", lat: 9.916927899, lng: -83.89214605 },
+                { category: "Agrícola", name: "Finca agrícola", product: "Zanahoria", characteristics: "No aportados", otherp: "Cebolla y papa", availability: "Todo el año", phone: "8881-7544", email: "No incluido", deliveries: "Dentro del cantón", others: "No incluido", lat: 9.916927899, lng: -83.89214605 },
+                { category: "Agrícola", name: "Agricarrots Produce and Trading Company S.A.", product: "Papa", characteristics: "Producto lavado. Diversas calidades", otherp: "Zanahoria", availability: "Todo el año", phone: "7122-7486", email: "juanjoramirez1994@gmail.com", deliveries: "Donde se requiera", others: "Proyecto con Buenas Prácticas Agrícolas y de Manufactura", lat: 9.887036196, lng: -83.87008008 },
+                { category: "Agrícola", name: "Agricarrots Produce and Trading Company S.A.", product: "Zanahoria", characteristics: "Producto lavado. Diversas calidades hasta mínimamente procesado para industria", otherp: "Papa", availability: "Todo el año", phone: "7122-7486", email: "juanjoramirez1994@gmail.com", deliveries: "Donde se requiera", others: "Proyecto con Buenas Prácticas Agrícolas y de Manufactura", lat: 9.887036196, lng: -83.87008008 },
+                { category: "Agrícola", name: "Finca San Gabriel", product: "Tomate bola", characteristics: "No incluido", otherp: "Tomate cherry, pepino, lechuga, culantro castilla, zucchini, jocote y manzana de agua", availability: "Todo el año", phone: "8853-2842", email: "No incluido", deliveries: "En cantones cercanos", others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica", lat: 9.788408328654098, lng: -84.10966829010474 },
+                { category: "Agrícola", name: "Finca San Gabriel", product: "Tomate cherry", characteristics: "No incluido", otherp: "Tomate bola, pepino, lechuga, culantro castilla, zucchini, jocote y manzana de agua", availability: "Todo el año", phone: "8853-2842", email: "No incluido", deliveries: "En cantones cercanos", others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica", lat: 9.788408328654098, lng: -84.10966829010474 },
+                { category: "Agrícola", name: "Finca San Gabriel", product: "Pepino", characteristics: "No incluido", otherp: "Tomate bola, tomate cherry, lechuga, culantro castilla, zucchini, jocote y manzana de agua", availability: "Todo el año", phone: "8853-2842", email: "No incluido", deliveries: "En cantones cercanos", others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica", lat: 9.788408328654098, lng: -84.10966829010474 },
+                { category: "Agrícola", name: "Finca San Gabriel", product: "Culantro castilla", characteristics: "No incluido", otherp: "Tomate bola, tomate cherry, lechuga, pepino, zucchini, jocote y manzana de agua", availability: "Todo el año", phone: "8853-2842", email: "No incluido", deliveries: "En cantones cercanos", others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica", lat: 9.788408328654098, lng: -84.10966829010474 },
+                { category: "Agrícola", name: "Finca San Gabriel", product: "Lechuga", characteristics: "No incluido", otherp: "Tomate bola, tomate cherry, culantro castilla, pepino, zucchini, jocote y manzana de agua", availability: "Todo el año", phone: "8853-2842", email: "No incluido", deliveries: "En cantones cercanos", others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica", lat: 9.788408328654098, lng: -84.10966829010474 },
+                { category: "Agrícola", name: "Finca San Gabriel", product: "Zucchini", characteristics: "No incluido", otherp: "Tomate bola, tomate cherry, culantro castilla, pepino, lechuga, jocote y manzana de agua", availability: "Todo el año", phone: "8853-2842", email: "No incluido", deliveries: "En cantones cercanos", others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica", lat: 9.788408328654098, lng: -84.10966829010474 },
+                { category: "Agrícola", name: "Finca San Gabriel", product: "Jocote", characteristics: "No incluido", otherp: "Tomate bola, tomate cherry, culantro castilla, pepino, lechuga, zucchini y manzana de agua", availability: "Por temporada", phone: "8853-2842", email: "No incluido", deliveries: "En cantones cercanos", others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica", lat: 9.788408328654098, lng: -84.10966829010474 },
+                { category: "Agrícola", name: "Finca San Gabriel", product: "Manzana de agua", characteristics: "No incluido", otherp: "Tomate bola, tomate cherry, culantro castilla, pepino, lechuga, zucchini y jocote", availability: "Por temporada", phone: "8853-2842", email: "No incluido", deliveries: "En cantones cercanos", others: "Certificado Tico-BPA y Certificado en Agricultura Agroecológica", lat: 9.788408328654098, lng: -84.10966829010474 }
             ];
 
-            var uniqueCategories = [...new Set(projects.map(project => project.category))].sort();
+            var uniqueCategories = [...new Set(projects.map(p => p.category))].sort();
             var categorySelect = document.getElementById('categoryFilter');
-            uniqueCategories.forEach(category => {
-                var option = document.createElement('option');
-                option.value = category;
-                option.text = category;
-                categorySelect.appendChild(option);
+            uniqueCategories.forEach(cat => {
+                var opt = document.createElement('option');
+                opt.value = cat; opt.text = cat;
+                categorySelect.appendChild(opt);
             });
 
             var productSelect = document.getElementById('productFilter');
             var markersLayer = L.layerGroup().addTo(map);
 
             window.updateProductFilter = function() {
-                console.log("updateProductFilter called");
-                var selectedCategory = categorySelect.value;
+                var selCat = categorySelect.value;
                 productSelect.innerHTML = '<option value="all">Todos los productos</option>';
-                var filteredProducts = [...new Set(
-                    projects
-                        .filter(project => selectedCategory === 'all' || project.category === selectedCategory)
-                        .map(project => project.product)
-                )].sort();
-                filteredProducts.forEach(product => {
-                    var option = document.createElement('option');
-                    option.value = product;
-                    option.text = product;
-                    productSelect.appendChild(option);
+                var prods = [...new Set(projects
+                    .filter(p => selCat === 'all' || p.category === selCat)
+                    .map(p => p.product))].sort();
+                prods.forEach(prod => {
+                    var opt = document.createElement('option');
+                    opt.value = prod; opt.text = prod;
+                    productSelect.appendChild(opt);
                 });
                 filterMarkers();
-                console.log("Products updated, filtering markers");
             };
 
             window.filterMarkers = function() {
-                console.log("filterMarkers called");
-                var selectedCategory = categorySelect.value;
-                var selectedProduct = productSelect.value;
+                var selCat = categorySelect.value;
+                var selProd = productSelect.value;
                 markersLayer.clearLayers();
-                projects.forEach(function(project) {
-                    if (
-                        (selectedCategory === 'all' || project.category === selectedCategory) &&
-                        (selectedProduct === 'all' || project.product === selectedProduct)
-                    ) {
-                        var icon = icons[project.category] || L.icon({
+                projects.forEach(p => {
+                    if ((selCat === 'all' || p.category === selCat) && (selProd === 'all' || p.product === selProd)) {
+                        var icon = icons[p.category] || L.icon({
                             iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
                             shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-                            iconSize: [25, 41],
-                            iconAnchor: [12, 41],
-                            popupAnchor: [0, -41],
-                            shadowSize: [41, 41]
+                            iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [0, -41], shadowSize: [41, 41]
                         });
-                        var marker = L.marker([project.lat, project.lng], { icon: icon }).addTo(markersLayer);
+                        var marker = L.marker([p.lat, p.lng], { icon: icon }).addTo(markersLayer);
                         marker.bindPopup(
-                            '<div class="project-name"><b>' + project.name + '</b></div>' +
+                            '<div class="project-name"><b>' + p.name + '</b></div>' +
                             '<ul>' +
-                                '<li><b>Producto:</b> ' + project.product + '</li>' +
-                                '<li><b>Características:</b> ' + project.characteristics + '</li>' +
-                                '<li><b>Otros productos:</b> ' + project.otherp + '</li>' +
-                                '<li><b>Disponibilidad:</b> ' + project.availability + '</li>' +
-                                '<li><b>Teléfono:</b> ' + project.phone + '</li>' +
-                                '<li><b>Correo:</b> ' + project.email + '</li>' +
-                                '<li><b>Entregas:</b> ' + project.deliveries + '</li>' +
-                                '<li><b>Otros detalles:</b> ' + project.others + '</li>' +
+                                '<li><b>Producto:</b> ' + p.product + '</li>' +
+                                '<li><b>Características:</b> ' + p.characteristics + '</li>' +
+                                '<li><b>Otros productos:</b> ' + p.otherp + '</li>' +
+                                '<li><b>Disponibilidad:</b> ' + p.availability + '</li>' +
+                                '<li><b>Teléfono:</b> ' + p.phone + '</li>' +
+                                '<li><b>Correo:</b> ' + p.email + '</li>' +
+                                '<li><b>Entregas:</b> ' + p.deliveries + '</li>' +
+                                '<li><b>Otros detalles:</b> ' + p.others + '</li>' +
                             '</ul>'
                         );
                     }
                 });
-                console.log("Markers filtered with category:", selectedCategory, "and product:", selectedProduct);
-                setTimeout(function() {
-                    map.invalidateSize();
-                }, 100);
+                setTimeout(() => map.invalidateSize(), 100);
             };
 
             updateProductFilter();
-            filterMarkers();
-            setTimeout(function() {
-                map.invalidateSize();
-            }, 200);
+            setTimeout(() => map.invalidateSize(), 200);
 
-            // Depuración básica
-            console.log("Mapa inicializado con centro en:", [9.9281, -84.0907]);
+            // === PANTALLA COMPLETA ===
+            const fullscreenBtn = document.getElementById('fullscreen-btn');
+            const mapContainer = document.getElementById('map');
+
+            function enterFullscreen() {
+                if (mapContainer.requestFullscreen) {
+                    mapContainer.requestFullscreen();
+                } else if (mapContainer.webkitRequestFullscreen) {
+                    mapContainer.webkitRequestFullscreen();
+                } else if (mapContainer.msRequestFullscreen) {
+                    mapContainer.msRequestFullscreen();
+                } else if (mapContainer.mozRequestFullScreen) {
+                    mapContainer.mozRequestFullScreen();
+                }
+            }
+
+            function exitFullscreen() {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                }
+            }
+
+            function handleFullscreenChange() {
+                const isFullscreen = document.fullscreenElement ||
+                    document.webkitFullscreenElement ||
+                    document.mozFullScreenElement ||
+                    document.msFullscreenElement;
+
+                if (isFullscreen) {
+                    fullscreenBtn.textContent = 'Salir pantalla completa';
+                    mapContainer.style.height = '100vh';
+                } else {
+                    fullscreenBtn.textContent = 'Pantalla completa';
+                    mapContainer.style.height = window.innerWidth <= 768 ? '90vh' : '80vh';
+                }
+                setTimeout(() => map.invalidateSize(true), 300);
+            }
+
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+            fullscreenBtn.addEventListener('click', () => {
+                const isFullscreen = document.fullscreenElement ||
+                    document.webkitFullscreenElement ||
+                    document.mozFullScreenElement ||
+                    document.msFullscreenElement;
+                if (isFullscreen) {
+                    exitFullscreen();
+                } else {
+                    enterFullscreen();
+                }
+            });
+
+            console.log("Mapa inicializado correctamente.");
         });
     </script>
 </body>
 </html>
-
